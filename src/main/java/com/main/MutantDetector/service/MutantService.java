@@ -22,14 +22,16 @@ public class MutantService {
     private final MutantDetector mutantDetector;
 
     public DnaResponseDTO comprobarMutante(DnaRequestDTO dnaRequest) throws InvalidDnaException {
+        // Calcula el hash del ADN para identificarlo de forma única
         String dnaHash = calcularDnaHash(dnaRequest.dna());
 
-
+        // Verifica si el ADN ya fue analizado previamente (cacheo)
         Optional<DnaRecord> dnaRecordGuardado = dnaRepository.findByDnaHash(dnaHash);
         if (dnaRecordGuardado.isPresent()) {
             return new DnaResponseDTO(dnaRecordGuardado.get().getEsMutante());
         }
 
+        // Si no está en cache, analiza el ADN y guarda el resultado
         Boolean esMutante = mutantDetector.isMutant(dnaRequest.dna());
         DnaRecord nuevoDnaRecord = new DnaRecord();
         nuevoDnaRecord.setDnaHash(dnaHash);
@@ -40,17 +42,18 @@ public class MutantService {
         return new DnaResponseDTO(esMutante);
     }
 
+    // Calcula el hash SHA-256 del ADN para usarlo como identificador único y evitar duplicados
     private String calcularDnaHash(String[] dna){
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             String dnaString = String.join("", dna);
             byte[] hashBytes = digest.digest(dnaString.getBytes(StandardCharsets.UTF_8));
 
-            // Convertir a hexadecimal
+            // Convierte el hash de bytes a string hexadecimal
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1) hexString.append('0');  // Asegura formato de 2 dígitos
                 hexString.append(hex);
             }
             return hexString.toString();

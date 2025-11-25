@@ -17,7 +17,7 @@ public class MutantDetector {
         if (!isValidDna(dna)) return false;
 
         final int n = dna.length;
-        int sequenceCount = 0;
+        int sequenceCount = 0;  // Contador de secuencias de 4 caracteres iguales encontradas
 
         // Conversión a char[][] (Optimización #1)
         char[][] matrix = new char[n][];
@@ -29,7 +29,7 @@ public class MutantDetector {
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
 
-                // Boundary Checking (Optimización #3)
+                // Verificación horizontal: solo si hay espacio suficiente hacia la derecha
                 if (col <= n - SEQUENCE_LENGTH) {
                     if (checkHorizontal(matrix, row, col)) {
                         sequenceCount++;
@@ -37,6 +37,7 @@ public class MutantDetector {
                     }
                 }
 
+                // Verificación vertical: solo si hay espacio suficiente hacia abajo
                 if (row <= n - SEQUENCE_LENGTH) {
                     if (checkVertical(matrix, row, col)) {
                         sequenceCount++;
@@ -44,6 +45,7 @@ public class MutantDetector {
                     }
                 }
 
+                // Verificación diagonal ascendente (de abajo-izquierda a arriba-derecha)
                 if (row > n - SEQUENCE_LENGTH && col <= n - SEQUENCE_LENGTH) {
                     if (checkDiagonalAsc(matrix, row, col)) {
                         sequenceCount++;
@@ -51,6 +53,7 @@ public class MutantDetector {
                     }
                 }
 
+                // Verificación diagonal descendente (de arriba-izquierda a abajo-derecha)
                 if (row <= n - SEQUENCE_LENGTH && col <= n - SEQUENCE_LENGTH) {
                     if (checkDiagonalDec(matrix, row, col)) {
                         sequenceCount++;
@@ -62,23 +65,26 @@ public class MutantDetector {
         return false;
     }
 
-    // Comparación directa (Optimización #4)
     private boolean checkHorizontal(char[][] matrix, int row, int col) {
         final char base = matrix[row][col];
+        // Evita contar secuencias superpuestas: si el carácter anterior es igual, ya fue contada
         if (col != 0 && matrix[row][col - 1] == base){
             return false;
         }
 
+        // Verifica que los siguientes 3 caracteres sean iguales al actual
         return matrix[row][col + 1] == base &&
                matrix[row][col + 2] == base &&
                matrix[row][col + 3] == base;
     }
     private boolean checkVertical(char[][] matrix, int row, int col) {
         final char base = matrix[row][col];
+        // Evita contar secuencias superpuestas: si el carácter superior es igual, ya fue contada
         if (row != 0 && matrix[row - 1][col] == base){
             return false;
         }
 
+        // Verifica que los siguientes 3 caracteres hacia abajo sean iguales al actual
         return matrix[row + 1][col] == base &&
                matrix[row + 2][col] == base &&
                matrix[row + 3][col] == base;
@@ -86,10 +92,12 @@ public class MutantDetector {
 
     private boolean checkDiagonalAsc(char[][] matrix, int row, int col) {
         final char base = matrix[row][col];
+        // Evita contar secuencias superpuestas: si el carácter diagonal anterior es igual, ya fue contada
         if (row != 0 && col != 0 && matrix[row - 1][col - 1] == base){
             return false;
         }
 
+        // Verifica que los siguientes 3 caracteres en diagonal ascendente sean iguales
         return matrix[row - 1][col + 1] == base &&
                matrix[row - 2][col + 2] == base &&
                matrix[row - 3][col + 3] == base;
@@ -97,10 +105,12 @@ public class MutantDetector {
 
     private boolean checkDiagonalDec(char[][] matrix, int row, int col) {
         final char base = matrix[row][col];
+        // Evita contar secuencias superpuestas: si el carácter diagonal anterior es igual, ya fue contada
         if (row != (matrix.length - 1) && col != 0 && matrix[row + 1][col - 1] == base){
             return false;
         }
 
+        // Verifica que los siguientes 3 caracteres en diagonal descendente sean iguales
         return matrix[row + 1][col + 1] == base &&
                matrix[row + 2][col + 2] == base &&
                matrix[row + 3][col + 3] == base;

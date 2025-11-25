@@ -36,6 +36,7 @@ class StatsServiceTest {
         }
     }
 
+    // Test: getStats retorna estadísticas correctas (cantHumanos, cantMutantes, ratio)
     @Test
     void testGetStats(){
         StatsResponseDTO statsResponse = statsService.getStats();
@@ -46,24 +47,28 @@ class StatsServiceTest {
 
     private List<String[]> dnaRecords() {
         return List.of(
+                // Caso 1: ADN mutante - secuencias horizontales de 4 caracteres iguales
                 new String[]{
                         "AAAA",
                         "TTTT",
                         "CCCC",
                         "GGGG"
                 },
+                // Caso 2: ADN mutante duplicado - para verificar contador de mutantes
                 new String[]{
                         "AAAA",
                         "TTTT",
                         "CCCC",
                         "GGGG"
                 },
+                // Caso 3: ADN humano - sin secuencias de 4 caracteres consecutivos iguales
                 new String[]{
                         "ACGT",
                         "TGGC",
                         "AACT",
                         "TGAC"
                 },
+                // Caso 4: ADN mutante - secuencias verticales de 4 caracteres iguales
                 new String[]{
                         "ACGT",
                         "ACGT",

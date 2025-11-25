@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class StatsService {
     private final DnaRecordRepository dnaRecordRepository;
 
+    // Calcula y retorna estadísticas de todos los ADN analizados (humanos, mutantes y ratio)
     public StatsResponseDTO getStats() {
         long dnaRecordHumanos =  dnaRecordRepository.countByEsMutante(false);
         long dnaRecordMutantes = dnaRecordRepository.countByEsMutante(true);

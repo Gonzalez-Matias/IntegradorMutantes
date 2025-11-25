@@ -24,6 +24,7 @@ public class MutantController {
     private final MutantService mutantService;
     private final StatsService statsService;
 
+    // Endpoint POST /mutant - Verifica si una secuencia de ADN pertenece a un mutante
     @PostMapping("/mutant")
     @Operation(summary = "Verificar si un ADN es mutante")
     @ApiResponses(value = {
@@ -32,13 +33,17 @@ public class MutantController {
             @ApiResponse(responseCode = "400", description = "ADN inválido")
     })
     public ResponseEntity<Void> comprobarMutante(@Valid @RequestBody DnaRequestDTO dnaRequest) throws InvalidDnaException {
+        // Analiza el ADN y determina si es mutante o humano
         DnaResponseDTO dnaResponseDTO = mutantService.comprobarMutante(dnaRequest);
+        // Retorna 200 OK si es mutante, 403 Forbidden si es humano
         return dnaResponseDTO.esMutante()? ResponseEntity.ok().build() : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+    // Endpoint GET /stats - Retorna estadísticas de todos los ADN analizados
     @GetMapping("/stats")
     @Operation(summary = "Obtener estadísticas de los DnaRecords guardados.")
     public ResponseEntity<StatsResponseDTO> getStats() {
+        // Obtiene las estadísticas (cantidad de humanos, mutantes y ratio)
         StatsResponseDTO stats = statsService.getStats();
         return ResponseEntity.ok(stats);
     }

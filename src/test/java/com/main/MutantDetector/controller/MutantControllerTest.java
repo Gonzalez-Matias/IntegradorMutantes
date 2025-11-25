@@ -19,7 +19,7 @@ class MutantControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // Mutante válido - 200 OK
+    // Test: POST /mutant retorna 200 OK para ADN de mutante válido
     @Test
     public void testMutantEndpoint_ReturnOk() throws Exception {
         String dnaJson = """
@@ -39,7 +39,7 @@ class MutantControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // Humano válido - 403 Forbidden
+    // Test: POST /mutant retorna 403 Forbidden para ADN de humano válido
     @Test
     public void testHumanEndpoint_ReturnForbidden() throws Exception {
         String dnaJson = """
@@ -54,7 +54,7 @@ class MutantControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    // Input inválido - 400 Bad Request
+    // Test: POST /mutant retorna 400 Bad Request para ADN con caracteres inválidos
     @Test
     public void testInvalidDna_ReturnBadRequest() throws Exception {
         String dnaJson = """
@@ -68,7 +68,7 @@ class MutantControllerTest {
                         .content(dnaJson))
                 .andExpect(status().isBadRequest());
     }
-    // Input inválido - 400 Bad Request
+    // Test: POST /mutant retorna 400 Bad Request para array de ADN con cadena vacía
     @Test
     public void testEmptyDna_ReturnBadRequest() throws Exception {
         String dnaJson = """
@@ -83,7 +83,7 @@ class MutantControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    // Input inválido - 400 Bad Request
+    // Test: POST /mutant retorna 400 Bad Request para formato de ADN incorrecto (string en lugar de array)
     @Test
     public void testIncorrectFormat_ReturnBadRequest() throws Exception {
         String dnaJson = """
@@ -98,7 +98,7 @@ class MutantControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    // Input inválido - 400 Bad Request
+    // Test: POST /mutant retorna 400 Bad Request para cuerpo de petición vacío
     @Test
     public void testEmptyString_ReturnBadRequest() throws Exception {
         String dnaJson = "";
@@ -109,7 +109,7 @@ class MutantControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    // Input inválido - 400 Bad Request
+    // Test: POST /mutant retorna 400 Bad Request para cuerpo de petición nulo
     @Test
     public void testNullDna_ReturnBadRequest() throws Exception {
         mockMvc.perform(post("/mutant")
@@ -118,7 +118,7 @@ class MutantControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    // Test stats - 200 Ok
+    // Test: GET /stats retorna 200 OK con estadísticas válidas (cantHumanos, cantMutantes, ratio)
     @Test
     public void testStatsEndpoint_ReturnOk() throws Exception {
         mockMvc.perform(get("/stats"))
