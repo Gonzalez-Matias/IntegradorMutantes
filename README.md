@@ -5,6 +5,8 @@
 [![Maven](https://img.shields.io/badge/Maven-3.x-blue.svg)](https://maven.apache.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+Alumno: Enzo Matias Gonzalez - 50504
+
 API REST desarrollada con Spring Boot para detectar mutantes mediante el análisis de secuencias de ADN. Este proyecto implementa un algoritmo optimizado que identifica patrones genéticos específicos en matrices cuadradas.
 
 ## 📋 Descripción
